@@ -1,21 +1,24 @@
-import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest,NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
 
-export async function POST(req:NextRequest) {
-  try {
-    const { email } = await req.json();
+interface CheckUserPayload{
+    email: string;
+}
 
-    if (!email) {
-      return NextResponse.json({exists: false},{status:400});
+export async function POST(req:NextRequest){
+    const body : CheckUserPayload = await req.json();
+
+    const { email } = body;
+
+    if (!email){
+        return NextResponse.json({message:"Email not found"},{status:400});
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await prisma.user.findUnique({where:{email}});
 
-    return NextResponse.json({exists: !!user},{status: 200});
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({exists: false},{status: 500});
-  }
+    if (!user){
+        return NextResponse.json({message:"User not found"},{status:401});
+    }
+
+    return NextResponse.json({user},{status:200});
 }

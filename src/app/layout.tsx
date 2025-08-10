@@ -1,22 +1,16 @@
-"use client";
-
-import { SessionProvider } from "next-auth/react";
-import type { Session } from "next-auth";
+import { auth } from "../../auth";
+import RootLayoutClient from "./RootLayoutClient";
 import "./globals.css";
 
-export default function RootLayout({
-  children,
-  session,
-}: {
-  children: React.ReactNode;
-  session?: Session;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+
   return (
     <html lang="en">
       <body className="h-screen">
-        <SessionProvider session={session}>
+        <RootLayoutClient session={session}>
           {children}
-        </SessionProvider>
+        </RootLayoutClient>
       </body>
     </html>
   );

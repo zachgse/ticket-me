@@ -30,21 +30,16 @@ model User {
 }
 
 model Ticket {
-  id      Int    @id @default(autoincrement())
-  title   String
-  content String
+  id       String    @id @default(uuid())
+  title    String
+  category String
+  content  String
 
-  creatorId  Int
-  assigneeId Int
+  creatorId  Int?
+  assigneeId Int?
 
-  creator  User @relation("CreatedTickets", fields: [creatorId], references: [id])
-  assignee User @relation("AssignedTickets", fields: [assigneeId], references: [id])
+  creator  User? @relation("CreatedTickets", fields: [creatorId], references: [id])
+  assignee User? @relation("AssignedTickets", fields: [assigneeId], references: [id])
 
   deleted DateTime?
 }
-
-/**
- * tables:
- * User
- * Tickets
- */
