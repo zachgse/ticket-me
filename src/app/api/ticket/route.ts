@@ -8,6 +8,18 @@ interface TicketPayload{
     content: string;
 }
 
+export async function GET(){
+    const tickets = await prisma.ticket.findMany({
+        include: {
+            creator: {
+                select: { name: true, email: true }
+            }
+        }
+    });
+
+    return NextResponse.json({data:tickets},{status:200});
+}
+
 export async function POST(req:NextRequest){
     const session = await auth();
     if (!session){

@@ -68,6 +68,20 @@ export const { handlers,signIn,signOut,auth } = NextAuth({
                 token.name = user.name;
                 token.email = user.email;
             }
+
+            if (!token.id && token.email) {
+                const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/check-user`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json"},
+                    body: JSON.stringify({ email: token.email })
+                });
+
+                const { user } = await res.json();
+                token.id = user.id;
+                token.name = user.name;
+                token.email = user.email;
+            }
+            
             return token;
         },
         async session({ session, token }) {
