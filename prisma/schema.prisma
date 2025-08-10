@@ -22,10 +22,11 @@ model User {
   password String
   email    String? @unique
   type     String  @default("user")
-  provider String
 
   createdTickets  Ticket[] @relation("CreatedTickets")
   assignedTickets Ticket[] @relation("AssignedTickets")
+
+  deleted DateTime?
 }
 
 model Ticket {
@@ -38,6 +39,8 @@ model Ticket {
 
   creator  User @relation("CreatedTickets", fields: [creatorId], references: [id])
   assignee User @relation("AssignedTickets", fields: [assigneeId], references: [id])
+
+  deleted DateTime?
 }
 
 /**

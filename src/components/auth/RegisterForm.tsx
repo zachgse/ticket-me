@@ -34,7 +34,6 @@ const RegisterForm = ({
       email,
       password,
       confirmPassword: passwordConfirmation,
-      provider: "credentials",
     };
 
     try {
