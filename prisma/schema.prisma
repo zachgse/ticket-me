@@ -30,10 +30,11 @@ model User {
 }
 
 model Ticket {
-  id       String    @id @default(uuid())
+  id       String @id @default(uuid())
   title    String
   category String
   content  String
+  status   String @default("pending")
 
   creatorId  Int?
   assigneeId Int?
