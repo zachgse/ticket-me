@@ -1,5 +1,5 @@
 import { columns, Payment } from "./columns"
-import { DataTable } from "./data-table"
+import { DataTable } from "../../components/data-table"
 
 async function getData(): Promise<Payment[]> {
   return [
