@@ -13,17 +13,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
+import Link from "next/link"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+export interface User {
+  name: string
+  email?: string
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export interface Ticket {
+  id: string
+  title: string
+  category: string
+  status: "pending" | "processing" | "completed"
+  creator: User
+  assignee: User
+}
+
+/*
+in displaying 
+accessor key is from the interface/promise 
+header is column header
+cell is used to style the entire column of each row of the specific value
+*/
+
+export const columns: ColumnDef<Ticket>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -48,33 +61,26 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "id",
-    header: "Payment ID",
+    header: "Ticket ID",
     cell: ({ row }) => <div className="font-mono">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "title",
+    header: "Title",
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({row}) => <div className="capitalize">{row.getValue("status")}</div>
   },
   {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-    cell: ({ row }) => {
-      const value = row.getValue("amount") as number;
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(value);
-      return <div className="font-medium">{formatted}</div>;
-    },
+    accessorKey: "creator.name",
+    header: "Created By",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const ticket = row.original as Ticket;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -85,14 +91,12 @@ export const columns: ColumnDef<Payment>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            {/* <DropdownMenuSeparator /> */}
+            <DropdownMenuItem>
+              <Link href={`/ticket/${ticket.id}`}>
+                View ticket
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

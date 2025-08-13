@@ -10,9 +10,16 @@ interface TicketPayload{
 
 export async function GET(){
     const tickets = await prisma.ticket.findMany({
-        include: {
+        select: {
+            id: true,
+            title: true,
+            category: true,
+            status: true,
             creator: {
                 select: { name: true, email: true }
+            },
+            assignee: {
+                select: { name: true, email: true }     
             }
         }
     });
