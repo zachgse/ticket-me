@@ -1,4 +1,6 @@
 import React from "react";
+import Status from "./status";
+import Form from "./form";
 
 interface Ticket {
   id: string;
@@ -31,6 +33,13 @@ const Show = async({params}:{params:{id:string}}) => {
     <>
       <p>Ticket ID: {ticket.id}</p>
       <p>Created by: {ticket.creator.name}</p>
+      <br/><br/><br/>
+      {ticket.status == 'processing' && (
+        <Status id={ticket.id}/>
+      )}
+
+      <br/><br/><br/>
+      <Form id={ticket.id}/>
     </>
   );
 }

@@ -1,22 +1,18 @@
-// interface for patch
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "../../../../../auth";
 
 interface TicketParams {
     params: {
-        id: string,
-        type?: string
+        id: string;
     }
 }
 
 interface TicketPayload{
-    conversation?: {
-        userId: number
-        message: string
-        time: Date
-    }
-    status?: "pending" | "processing" | "completed"
+    type: "status" | "remarks";
+    remarks?: string
 }
+
 
 export const GET = async(req:NextRequest,{params}: TicketParams) => {
     const id = params.id;
@@ -40,6 +36,7 @@ export const GET = async(req:NextRequest,{params}: TicketParams) => {
 }
 
 export const PATCH = async(req:NextRequest, {params} : TicketParams) => {
+    const session = await auth();
     const ticket = await prisma.ticket.findUnique({
         where: {id:params.id}
     });
@@ -48,17 +45,30 @@ export const PATCH = async(req:NextRequest, {params} : TicketParams) => {
         return NextResponse.json({message:"Ticket not found"},{status:404});
     }
 
-    if (params.type == 'conversation'){
-        const { conversation } : TicketPayload = await req.json();
+    const body : TicketPayload = await req.json();
+    const { type } = body;
+
+    if (type == 'status'){
         await prisma.ticket.update({
             where: {id:params.id},
-            data:{conversation}
-        })
-    } else { 
-        const { status } : TicketPayload = await req.json();
+            data:{
+                status: "completed"
+            }
+        });
+    } else {
+        const {remarks} = body; 
+        const existingConversation = Array.isArray(ticket?.conversation) ? ticket.conversation : [];
+        const newConversation = {
+            id: session?.user?.id,
+            message: remarks,
+            date: new Date().toISOString()  
+        }
         await prisma.ticket.update({
             where: {id:params.id},
-            data: {status}
+            data:{
+                conversation: [...existingConversation,newConversation],
+                status: 'processing',
+            }
         });
     }
 

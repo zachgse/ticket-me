@@ -16,8 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
 
 export interface User {
-  name: string
-  email?: string
+  email: string
 }
 
 export interface Ticket {
@@ -74,8 +73,8 @@ export const columns: ColumnDef<Ticket>[] = [
     cell: ({row}) => <div className="capitalize">{row.getValue("status")}</div>
   },
   {
-    accessorKey: "creator.name",
-    header: "Created By",
+    accessorKey: "creator.email",
+    header: "Email",
   },
   {
     id: "actions",
