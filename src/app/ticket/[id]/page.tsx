@@ -30,7 +30,7 @@ const Show = async({params}:{params:{id:string}}) => {
   const ticket = await getData(id);
 
   return (
-    <>
+    <div className="px-12">
       <p>Ticket ID: {ticket.id}</p>
       <p>Created by: {ticket.creator.name}</p>
       <br/><br/><br/>
@@ -40,7 +40,7 @@ const Show = async({params}:{params:{id:string}}) => {
 
       <br/><br/><br/>
       <Form id={ticket.id}/>
-    </>
+    </div>
   );
 }
 

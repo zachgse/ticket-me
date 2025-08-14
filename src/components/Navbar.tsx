@@ -11,9 +11,9 @@ const Navbar = () => {
         <Link href="/" className="text-4xl font-bold tracking-wide text-[#A1E8AF] uppercase">
             Ticket - Me
         </Link>
-        <div className="ml-auto text-blue-500 flex gap-4">
-          <Link href="/ticket/create">
-            Create Ticket
+        <div className="text-blue-500 flex gap-4">
+          <Link href="/ticket" className='ml-auto'>
+            Tickets
           </Link>
             {session 
                 ? <p className="cursor-pointer" onClick={() => signOut()}>Logout</p> 
