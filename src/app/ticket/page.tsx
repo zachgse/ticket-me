@@ -18,13 +18,16 @@ export default async function DemoPage() {
   const data = await getData()
 
   return (
-    <div className="container mx-auto py-10 px-12 space-y-4">
-      <Link className="space-y-2" href="/ticket/create">
-        <Button className="float-right flex items-center gap-1">
+    <div className="container mx-auto py-10 px-12">
+      <div className="mb-12" >
+      <Link href="/ticket/create">
+        <Button className="float-right flex items-center cursor-pointer gap-1">
           <Plus className="w-4 h-4"/>
           Create Ticket
         </Button>
       </Link>
+      </div>
+
       <DataTable columns={columns} data={data} />
     </div>
   )

@@ -11,8 +11,8 @@ const Navbar = () => {
         <Link href="/" className="text-4xl font-bold tracking-wide text-[#A1E8AF] uppercase">
             Ticket - Me
         </Link>
-        <div className="text-blue-500 flex gap-4">
-          <Link href="/ticket" className='ml-auto'>
+        <div className="text-blue-500 flex gap-4 ml-auto">
+          <Link href="/ticket">
             Tickets
           </Link>
             {session 
