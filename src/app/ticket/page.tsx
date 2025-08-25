@@ -1,8 +1,9 @@
+"use client"
+
+import { useQuery } from "@tanstack/react-query" 
 import { columns, Ticket } from "./columns"
 import { DataTable } from "../../components/data-table"
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import Link from "next/link";
+import ButtonCreate from "./create/button";
 
 async function getData(): Promise<Ticket[]> {
   const response = await fetch('http://localhost:3000/api/ticket', {
@@ -14,21 +15,16 @@ async function getData(): Promise<Ticket[]> {
   return tickets.data;
 }
 
-export default async function DemoPage() {
-  const data = await getData()
+export default function TicketPage() {
+  const { data: tickets = [] } = useQuery({
+    queryKey: ["tickets"],
+    queryFn: getData,
+  });
 
   return (
     <div className="container mx-auto py-10 px-12">
-      <div className="mb-12" >
-      <Link href="/ticket/create">
-        <Button className="float-right flex items-center cursor-pointer gap-1">
-          <Plus className="w-4 h-4"/>
-          Create Ticket
-        </Button>
-      </Link>
-      </div>
-
-      <DataTable columns={columns} data={data} />
+      <ButtonCreate/>
+      <DataTable columns={columns} data={tickets} />
     </div>
   )
 }

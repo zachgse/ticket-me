@@ -1,42 +1,63 @@
 "use client" 
 
-import React, {useState} from 'react'
-import { Card } from '@/components/ui/card'
+import React, {Dispatch, SetStateAction, useState} from 'react'
+import { useMutation,useQueryClient } from '@tanstack/react-query'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
+import Loading from './loading'
+import toast, { Toaster } from 'react-hot-toast'
 
-const TicketForm = () => {
+interface TicketFormProps {
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const TicketForm = ({setIsModalOpen}:TicketFormProps) => {
+    const queryClient = useQueryClient();
     const [title,setTitle] = useState('');
     const [category,setCategory] = useState('');
     const [content,setContent] = useState('');
 
-    const handleSubmit = async(e: React.FormEvent) => {
-        e.preventDefault();
-
-        const payload = {
-            title,category,content
-        }
+    async function createTicket(ticketData: any){
+        await new Promise(resolve => setTimeout(resolve,2000));
 
         const response = await fetch(`/api/ticket`, {
             method: 'POST',
             headers: { "Content-Type":"application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(ticketData)
         });
-        
-        console.log("Response", response);
+
+        return response.json();
     }
+
+    const mutation = useMutation({
+        mutationFn: createTicket,
+        onSuccess: () => {
+            toast.success('Ticket has been created');
+            setTitle('');
+            setCategory('');
+            setContent('');
+            setTimeout(() => setIsModalOpen(false), 1000);
+            queryClient.invalidateQueries({queryKey:["tickets"]});
+        }
+    })
+
+    const handleSubmit = async(e: React.FormEvent) => {
+        e.preventDefault(); 
+        mutation.mutate({title,category,content});
+    }
+
     
     return (
-    <Card className='md:w-2/5 w-4/5 p-8 mx-auto'>
-        <p className="font-bold text-3xl">File a ticket</p>
-
-        <form className='space-y-4' onSubmit={handleSubmit}>
-            <div className="space-y-2">
-                <Label htmlFor='title'>Title</Label>
-                <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
+    <>
+        {mutation.isPending && (<Loading/>)}
+        <Toaster/>
+        <form className='space-y-8' onSubmit={handleSubmit}>
+            <div className="space-y-4">
+                <Label htmlFor='title'>Subject</Label>
+                <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder='Ticket subject here ...'/>
             </div>
             
             <div className="space-y-2">
@@ -58,9 +79,9 @@ const TicketForm = () => {
                 <Textarea placeholder="Ticket description here ..." id="content" value={content} onChange={(e)=>setContent(e.target.value)}/>
             </div>
 
-            <Button type="submit" className='float-right cursor-pointer'>Create</Button>
-        </form>        
-    </Card>
+            <Button type="submit" className='float-right cursor-pointer mt-auto'>Create</Button>
+        </form>   
+    </>
     )
 }
 

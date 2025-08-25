@@ -1,5 +1,6 @@
 import { auth } from "../../auth";
 import RootLayoutClient from "./RootLayoutClient";
+import Providers from "./Providers";
 import "./globals.css";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -8,9 +9,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className="h-screen">
-        <RootLayoutClient session={session}>
-          {children}
-        </RootLayoutClient>
+        <Providers>
+          <RootLayoutClient session={session}>
+            {children}
+          </RootLayoutClient>
+        </Providers>
       </body>
     </html>
   );
