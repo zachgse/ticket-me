@@ -3,11 +3,13 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 
-interface TicketProps {
+type TicketProps = {
     id: string;
 }
 
 const Status = ({id}:TicketProps) => {
+    if (!id) return null;
+
     const processTicket = async() => {
         const type = "status";
         const payload = {type};
@@ -20,7 +22,7 @@ const Status = ({id}:TicketProps) => {
     }
 
     return (
-        <Button className="cursor-pointer" onClick={processTicket}>Complete Ticket</Button>
+        <Button className="cursor-pointer w-32" onClick={processTicket}>Complete Ticket</Button>
     )
 }
 

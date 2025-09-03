@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
+import { statusBadge } from "@/utils/styleHelpers";
 
 export interface User {
   email: string
@@ -61,7 +62,7 @@ export const columns: ColumnDef<Ticket>[] = [
   {
     accessorKey: "id",
     header: "Ticket ID",
-    cell: ({ row }) => <div className="font-mono">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="font-mono">{row.getValue("id")}</div>, //add link here
   },
   {
     accessorKey: "title",
@@ -70,11 +71,12 @@ export const columns: ColumnDef<Ticket>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({row}) => <div className="capitalize">{row.getValue("status")}</div>
+    cell: ({row}) => <div className={statusBadge(row.getValue("status"))}>{row.getValue("status")}</div>
   },
   {
     accessorKey: "creator.email",
     header: "Email",
+    // cell: ({row}) => <div className={statusBadge(row.getValue("status"))}>{row.getValue("status")}</div>
   },
   {
     id: "actions",

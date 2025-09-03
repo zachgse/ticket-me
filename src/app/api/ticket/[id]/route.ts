@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "../../../../../auth";
 
-interface TicketParams {
+export default interface TicketParams {
     params: {
         id: string;
     }
@@ -72,5 +72,5 @@ export const PATCH = async(req:NextRequest, {params} : TicketParams) => {
         });
     }
 
-    return NextResponse.json({message:"Ticket has been updated"},{status:200});
+    return NextResponse.json({data:ticket,message:"Ticket has been updated"},{status:200});
 }
