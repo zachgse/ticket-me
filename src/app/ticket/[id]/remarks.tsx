@@ -6,6 +6,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useMutation,useQueryClient } from '@tanstack/react-query'
 import { Ticket } from '@/utils/types'
+import Loading from '@/components/loading'
+import toast, { Toaster } from 'react-hot-toast'
 
 interface FormProps {
     id: string;
@@ -21,6 +23,8 @@ const Remarks = ({id}:FormProps) => {
     const [remarks,setRemarks] = useState('');
 
     async function submitRemarks({id,remarks}:RemarksForm):Promise<Ticket>{
+        await new Promise(resolve => setTimeout(resolve,2000));
+
         const type = "remarks";
         const payload = {remarks,type};
         
@@ -39,6 +43,7 @@ const Remarks = ({id}:FormProps) => {
         // then on handleSubmit, thats where i have to pass the id and remarks (or which variables and parameters i need)
         mutationFn: () => submitRemarks({id,remarks}),
         onSuccess: () => {
+            toast.success('Ticket remarks has been created.');
             setRemarks('');
             queryClient.invalidateQueries({queryKey:["ticket",id]});
         }
@@ -50,6 +55,9 @@ const Remarks = ({id}:FormProps) => {
     }
 
     return (
+        <>
+        {mutation.isPending && <Loading/>}
+        <Toaster/>
         <Card className="w-full p-8 my-8">
             <form className='space-y-4' onSubmit={handleSubmit}>
                 <Textarea placeholder="Ticket Remarks here ..." id="content" 
@@ -57,6 +65,7 @@ const Remarks = ({id}:FormProps) => {
                 <Button type="submit" className='float-right cursor-pointer'>Create</Button>
             </form>
         </Card>
+        </>
     )
 }
 

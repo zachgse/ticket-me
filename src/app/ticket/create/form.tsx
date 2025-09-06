@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
-import Loading from './loading'
+import Loading from '../../../components/loading'
 import toast, { Toaster } from 'react-hot-toast'
 
 interface TicketFormProps {
@@ -79,7 +79,7 @@ const TicketForm = ({setIsModalOpen}:TicketFormProps) => {
                 <Textarea placeholder="Ticket description here ..." id="content" value={content} onChange={(e)=>setContent(e.target.value)}/>
             </div>
 
-            <Button type="submit" className='float-right cursor-pointer mt-auto'>Create</Button>
+            <Button type="submit" className='float-right cursor-pointer mt-auto' disabled={mutation.isPending}>Create</Button>
         </form>   
     </>
     )
